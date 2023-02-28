@@ -7,12 +7,6 @@
 <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js'></script>
 <script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
 <script>
-    let laborers = []
-    let laborerId = function* genLaborerId() {
-        let laborerId = 1
-        while(true) yield laborerId++
-    }()        
-
     function isVal(field) {        
         let isGood = false
         let errMsg
@@ -37,40 +31,51 @@
         $('#laborers').empty()
     
         $.ajax({
-	        if(laborers.length) {
-	            const laborerArr = []
-	            
-	            $.each(laborers, (i, laborer) => {
-	                laborerArr.unshift(
-	                    `<tr>
-	                        <td><input type='radio' value='${laborer.laborerId}' id='laborerId' name='laborerId'/></td>
-	                        <td>${laborer.laborerId}</td>
-	                        <td>${laborer.laborerName}</td>
-	                        <td>${laborer.hireDate}</td>
-	                    </tr>`
-	                )
-	            })
-	    
-	            $('#laborers').append(laborerArr.join(''))
-	        } else $('#laborers').append(
-	            '<tr><td colspan=4 class=text-center>노동자가 없습니다.</td></tr>')
+        	url: 'laborer/getLaborers.jsp',
+        	dataType: 'json',
+        	success: laborers => {        		
+		        if(laborers.length) {
+		            const laborerArr = []
+		            
+		            $.each(laborers, (i, laborer) => {
+		                laborerArr.unshift(
+		                    `<tr>
+		                        <td><input type='radio' value='\${laborer.laborerId}' id='laborerId' name='laborerId'/></td>
+		                        <td>\${laborer.laborerId}</td>
+		                        <td>\${laborer.laborerName}</td>
+		                        <td>\${laborer.hireDate}</td>
+		                    </tr>`
+		                )
+		            })
+		    
+		            $('#laborers').append(laborerArr.join(''))
+		        } else $('#laborers').append(
+		            '<tr><td colspan=4 class=text-center>노동자가 없습니다.</td></tr>')
+        	}
         })
     }
     
-    function init() {
+    function init() { 
+    	// 노동자 목록
     	listLaborers()
     	
         // 노동자 추가
         $('#addLaborerBtn').click(() => {
             if(isVal($('#laborerName')) && isVal($('#hireDate'))) {
                 let laborer = {
-                    laborerId: laborerId.next().value,
+                    // 삭제: laborerId: laborerId.next().value,
                     laborerName: $('#laborerName').val(),
                     hireDate: $('#hireDate').val()
                 }
-    
+    			/* 삭제:
                 laborers.push(laborer)
                 listLaborers()
+                */               
+                $.ajax({
+	                url: 'laborer/addLaborer.jsp',                  
+	                data: laborer,
+	                success: listLaborers
+        		})        		
             }
         })
     
@@ -78,17 +83,30 @@
         $('#fixLaborerBtn').click(() => {
             if(isVal($('#laborerId:checked')) &&
                 isVal($('#laborerName')) && isVal($('#hireDate'))) {
-                    let laborerId = $('#laborerId:checked').val()
-                    
-                    let laborer = laborers.filter(laborer => 
-                        laborer.laborerId == laborerId)[0]
-                    
-                    if(laborer) {
-                        laborer.laborerName =$('#laborerName').val()
-                        laborer.hireDate = $('#hireDate').val()
-                        listLaborers()
-                    }                   
+           		/* 삭제:
+                let laborerId = $('#laborerId:checked').val()
+                   
+                let laborer = laborers.filter(laborer => 
+                laborer.laborerId == laborerId)[0]
+                   
+                if(laborer) {
+                   laborer.laborerName =$('#laborerName').val()
+                   laborer.hireDate = $('#hireDate').val()
+                   listLaborers()
                 }
+           		*/
+           		let laborer = {
+                   laborerId: $('#laborerId:checked').val(), 
+                   laborerName: $('#laborerName').val(),
+                   hireDate: $('#hireDate').val()
+                }
+                       
+                $.ajax({
+                   url: 'laborer/fixLaborer.jsp',                  
+                   data: laborer,
+                   success: listLaborers
+               	})
+             }
         })
 
         $('#laborers').on({
@@ -108,12 +126,19 @@
         })  
 
         $('#delLaborerOkBtn').click(() => {
+        	/* 삭제:
             let laborerId = $('#laborerId:checked').val()
             
             laborers = laborers.filter(laborer => laborer.laborerId != laborerId)
+            */
+            $.ajax({
+                url: 'laborer/delLaborer.jsp',                  
+                data: {laborerId: $('#laborerId:checked').val()},
+                success: listLaborers
+           	})
     
             $('#modal').modal('hide')
-            listLaborers()
+            //삭제: listLaborers()
         })
     }
     
@@ -182,7 +207,7 @@
                             <tr><th></th><th>ID</th><th>이름</th><th>입사일</th></tr>
                         </thead>
                         <tbody id='laborers'>
-                            <tr><td colspan='4' class='text-center'>노동자가 없습니다.</td></tr>
+                            
                         </tbody>
                     </table>
                 </div>

@@ -26,7 +26,7 @@ public class LaborerServiceImpl implements LaborerService {
 	}
 	
 	@Override
-	public void fixLaborer(Laborer laborer) throws NoneException {
+	public void fixLaborer(Laborer laborer) throws NoneException {		
 		laborerDao.updateLaborer(laborer);
 	}
 	

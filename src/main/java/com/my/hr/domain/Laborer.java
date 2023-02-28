@@ -11,8 +11,20 @@ public class Laborer {
 		this.laborerId = laborerId;
 		this.laborerName = laborerName;
 		this.hireDate = hireDate;
-	}
+	}	
 	
+	public int getLaborerId() {
+		return laborerId;
+	}
+
+	public String getLaborerName() {
+		return laborerName;
+	}
+
+	public LocalDate getHireDate() {
+		return hireDate;
+	}
+
 	@Override
 	public String toString() {
 		return String.format("%2d %-5s %s", laborerId, laborerName, hireDate);
