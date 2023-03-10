@@ -62,15 +62,11 @@
         // 노동자 추가
         $('#addLaborerBtn').click(() => {
             if(isVal($('#laborerName')) && isVal($('#hireDate'))) {
-                let laborer = {
-                    // 삭제: laborerId: laborerId.next().value,
+                let laborer = {                   
                     laborerName: $('#laborerName').val(),
                     hireDate: $('#hireDate').val()
                 }
-    			/* 삭제:
-                laborers.push(laborer)
-                listLaborers()
-                */               
+    			            
                 $.ajax({
 	                url: 'laborer/addLaborer.jsp',                  
 	                data: laborer,
@@ -82,19 +78,7 @@
         // 노동자 수정
         $('#fixLaborerBtn').click(() => {
             if(isVal($('#laborerId:checked')) &&
-                isVal($('#laborerName')) && isVal($('#hireDate'))) {
-           		/* 삭제:
-                let laborerId = $('#laborerId:checked').val()
-                   
-                let laborer = laborers.filter(laborer => 
-                laborer.laborerId == laborerId)[0]
-                   
-                if(laborer) {
-                   laborer.laborerName =$('#laborerName').val()
-                   laborer.hireDate = $('#hireDate').val()
-                   listLaborers()
-                }
-           		*/
+                isVal($('#laborerName')) && isVal($('#hireDate'))) {           		
            		let laborer = {
                    laborerId: $('#laborerId:checked').val(), 
                    laborerName: $('#laborerName').val(),
@@ -126,11 +110,6 @@
         })  
 
         $('#delLaborerOkBtn').click(() => {
-        	/* 삭제:
-            let laborerId = $('#laborerId:checked').val()
-            
-            laborers = laborers.filter(laborer => laborer.laborerId != laborerId)
-            */
             $.ajax({
                 url: 'laborer/delLaborer.jsp',                  
                 data: {laborerId: $('#laborerId:checked').val()},
@@ -138,7 +117,6 @@
            	})
     
             $('#modal').modal('hide')
-            //삭제: listLaborers()
         })
     }
     
